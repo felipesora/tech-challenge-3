@@ -1,0 +1,29 @@
+services:
+
+  postgres:
+    image: postgres:16
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: fiap_user
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5433:5432"
+    volumes:
+      - tech-challenge-database-pgdata:/var/lib/postgresql/data
+      - ./db-config/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - tech-challenge-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+networks:
+  tech-challenge-network:
+
+volumes:
+  tech-challenge-database-pgdata:
