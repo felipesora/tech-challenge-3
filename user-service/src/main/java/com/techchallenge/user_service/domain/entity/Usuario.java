@@ -70,7 +70,7 @@ public class Usuario {
         this.tipoUsuarioId = tipoUsuarioId;
     }
 
-    public boolean isAtivo() {
+    public boolean getAtivo() {
         return ativo;
     }
 

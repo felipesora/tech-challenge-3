@@ -19,4 +19,37 @@ public class TipoUsuarioEntity {
 
     @Column(nullable = false)
     private boolean ativo;
+
+    public TipoUsuarioEntity() {
+    }
+
+    public TipoUsuarioEntity(UUID id, TipoUsuarioEnum tipo, boolean ativo) {
+        this.id = id;
+        this.tipo = tipo;
+        this.ativo = ativo;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public TipoUsuarioEnum getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(TipoUsuarioEnum tipo) {
+        this.tipo = tipo;
+    }
+
+    public boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo) {
+        this.ativo = ativo;
+    }
 }

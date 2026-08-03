@@ -30,7 +30,7 @@ public class TipoUsuario {
         this.tipo = tipo;
     }
 
-    public boolean isAtivo() {
+    public boolean getAtivo() {
         return ativo;
     }
 
