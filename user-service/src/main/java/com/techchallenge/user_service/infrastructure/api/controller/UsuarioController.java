@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class UsuarioController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('MEDICO','ENFERMEIRO')")
     @Operation(summary = "Buscar usuário por ID", description = "Retorna uma lista contendo todos os usuários cadastrados.")
     @ApiResponse(responseCode = "200", description = "Lista recuperada com sucesso")
     public ResponseEntity<List<UsuarioResponseDTO>> listarTodos() {
@@ -35,6 +37,11 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("""
+    hasAnyRole('MEDICO','ENFERMEIRO')
+    or
+    #id == authentication.principal.id
+    """)
     @Operation(summary = "Buscar tipo de usuário por ID", description = "Busca os detalhes de um usuário específico utilizando o seu UUID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso"),
