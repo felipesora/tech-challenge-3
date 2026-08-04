@@ -16,3 +16,7 @@ spring:
         default_schema: app
         format_sql: true
     show-sql: false
+
+jwt:
+  expiration: ${JWT_EXPIRATION:2592000000} # 30 dias
+  key: ${JWT_KEY:4e5f8a9c2d1b7f6a3c8e9d0f1a2b3c4d5e6f7a8b9c0d1e2f}

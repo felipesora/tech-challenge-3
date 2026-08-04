@@ -39,7 +39,7 @@ public record UsuarioResponseDTO(
                 usuario.getNome(),
                 usuario.getEmail(),
                 formatarCpf(usuario.getCpf()),
-                usuario.getTipoUsuarioId(),
+                usuario.getTipoUsuario().getId(),
                 usuario.getAtivo()
         );
     }

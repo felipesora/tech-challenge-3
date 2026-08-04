@@ -1,4 +1,4 @@
-package com.techchallenge.user_service.application.usecase.usuario;
+package com.techchallenge.user_service.application.usecase.auth;
 
 import com.techchallenge.user_service.application.dto.UsuarioRequestDTO;
 import com.techchallenge.user_service.application.dto.UsuarioResponseDTO;
@@ -9,15 +9,18 @@ import com.techchallenge.user_service.domain.entity.Usuario;
 import com.techchallenge.user_service.infrastructure.exception.BadRequestException;
 import com.techchallenge.user_service.infrastructure.exception.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class CriarUsuarioUseCase {
 
     private final UsuarioGateway usuarioGateway;
     private final TipoUsuarioGateway tipoUsuarioGateway;
+    private final PasswordEncoder passwordEncoder;
 
-    public CriarUsuarioUseCase(UsuarioGateway usuarioGateway, TipoUsuarioGateway tipoUsuarioGateway) {
+    public CriarUsuarioUseCase(UsuarioGateway usuarioGateway, TipoUsuarioGateway tipoUsuarioGateway, PasswordEncoder passwordEncoder) {
         this.usuarioGateway = usuarioGateway;
         this.tipoUsuarioGateway = tipoUsuarioGateway;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -40,8 +43,8 @@ public class CriarUsuarioUseCase {
                 request.nome(),
                 request.email(),
                 cpf,
-                request.senha(),
-                tipoUsuario.getId(),
+                passwordEncoder.encode(request.senha()),
+                tipoUsuario,
                 true
         );
 

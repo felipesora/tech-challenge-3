@@ -8,8 +8,14 @@ import java.util.UUID;
 
 public interface UsuarioGateway {
     Usuario salvar(Usuario usuario);
+
     List<Usuario> buscarTodos();
+
     Optional<Usuario> buscarPorId(UUID id);
+
+    Optional<Usuario> buscarPorEmail(String email);
+
     boolean existePorEmail(String email);
+
     boolean existePorCpf(String cpf);
 }

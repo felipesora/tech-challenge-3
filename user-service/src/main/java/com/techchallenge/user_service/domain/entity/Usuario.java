@@ -9,16 +9,16 @@ public class Usuario {
     private String email;
     private String cpf;
     private String senhaHash;
-    private UUID tipoUsuarioId;
+    private TipoUsuario tipoUsuario;
     private boolean ativo;
 
-    public Usuario(UUID id, String nome, String email, String cpf, String senhaHash, UUID tipoUsuarioId, boolean ativo) {
+    public Usuario(UUID id, String nome, String email, String cpf, String senhaHash, TipoUsuario tipoUsuario, boolean ativo) {
         this.id = id;
         this.nome = nome;
         this.email = email;
         this.cpf = cpf;
         this.senhaHash = senhaHash;
-        this.tipoUsuarioId = tipoUsuarioId;
+        this.tipoUsuario = tipoUsuario;
         this.ativo = ativo;
     }
 
@@ -62,12 +62,12 @@ public class Usuario {
         this.senhaHash = senhaHash;
     }
 
-    public UUID getTipoUsuarioId() {
-        return tipoUsuarioId;
+    public TipoUsuario getTipoUsuario() {
+        return tipoUsuario;
     }
 
-    public void setTipoUsuarioId(UUID tipoUsuarioId) {
-        this.tipoUsuarioId = tipoUsuarioId;
+    public void setTipoUsuario(TipoUsuario tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
     }
 
     public boolean getAtivo() {

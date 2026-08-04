@@ -1,6 +1,7 @@
 package com.techchallenge.user_service.infrastructure.database.adapter;
 
 import com.techchallenge.user_service.application.gateway.UsuarioGateway;
+import com.techchallenge.user_service.domain.entity.TipoUsuario;
 import com.techchallenge.user_service.domain.entity.Usuario;
 import com.techchallenge.user_service.infrastructure.database.entity.TipoUsuarioEntity;
 import com.techchallenge.user_service.infrastructure.database.entity.UsuarioEntity;
@@ -40,6 +41,12 @@ public class UsuarioRepositoryAdapter implements UsuarioGateway {
     }
 
     @Override
+    public Optional<Usuario> buscarPorEmail(String email) {
+        return repository.findByEmail(email)
+                .map(this::toDomain);
+    }
+
+    @Override
     public boolean existePorEmail(String email) {
         return repository.existsByEmail(email);
     }
@@ -58,22 +65,32 @@ public class UsuarioRepositoryAdapter implements UsuarioGateway {
         entity.setSenhaHash(domain.getSenhaHash());
         entity.setAtivo(domain.getAtivo());
 
-        if (domain.getTipoUsuarioId() != null) {
+        if (domain.getTipoUsuario().getId() != null) {
             TipoUsuarioEntity tipo = new TipoUsuarioEntity();
-            tipo.setId(domain.getTipoUsuarioId());
+            tipo.setId(domain.getTipoUsuario().getId());
             entity.setTipoUsuario(tipo);
         }
         return entity;
     }
 
     private Usuario toDomain(UsuarioEntity entity) {
+        TipoUsuario tipoUsuario = null;
+
+        if (entity.getTipoUsuario() != null) {
+            tipoUsuario = new TipoUsuario(
+                    entity.getTipoUsuario().getId(),
+                    entity.getTipoUsuario().getTipo(),
+                    entity.getTipoUsuario().getAtivo()
+            );
+        }
+
         return new Usuario(
                 entity.getId(),
                 entity.getNome(),
                 entity.getEmail(),
                 entity.getCpf(),
                 entity.getSenhaHash(),
-                entity.getTipoUsuario() != null ? entity.getTipoUsuario().getId() : null,
+                tipoUsuario,
                 entity.getAtivo()
         );
     }

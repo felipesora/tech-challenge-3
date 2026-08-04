@@ -24,7 +24,7 @@ public class UsuarioEntity {
     @Column(name = "senha_hash", nullable = false, length = 255)
     private String senhaHash;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_tipo", nullable = false)
     private TipoUsuarioEntity tipoUsuario;
 

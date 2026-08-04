@@ -1,20 +1,15 @@
 package com.techchallenge.user_service.infrastructure.api.controller;
 
-import com.techchallenge.user_service.application.dto.UsuarioRequestDTO;
 import com.techchallenge.user_service.application.dto.UsuarioResponseDTO;
 import com.techchallenge.user_service.application.usecase.usuario.BuscarUsuarioPorIdUseCase;
-import com.techchallenge.user_service.application.usecase.usuario.CriarUsuarioUseCase;
 import com.techchallenge.user_service.application.usecase.usuario.ListarUsuariosUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,28 +18,13 @@ import java.util.UUID;
 @Tag(name = "Usuários", description = "Endpoints para o gerenciamento de usuários (MEDICO, ENFERMEIRO, PACIENTE)")
 public class UsuarioController {
 
-    private final CriarUsuarioUseCase criarUsuarioUseCase;
     private final ListarUsuariosUseCase listarUsuariosUseCase;
     private final BuscarUsuarioPorIdUseCase buscarUsuarioPorIdUseCase;
 
-    public UsuarioController(CriarUsuarioUseCase criarUsuarioUseCase,
-                             ListarUsuariosUseCase listarUsuariosUseCase,
+    public UsuarioController(ListarUsuariosUseCase listarUsuariosUseCase,
                              BuscarUsuarioPorIdUseCase buscarUsuarioPorIdUseCase) {
-        this.criarUsuarioUseCase = criarUsuarioUseCase;
         this.listarUsuariosUseCase = listarUsuariosUseCase;
         this.buscarUsuarioPorIdUseCase = buscarUsuarioPorIdUseCase;
-    }
-
-    @PostMapping
-    @Operation(summary = "Criar um novo usuário", description = "Cadastra um novo usuário no sistema.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Usuário criado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
-    })
-    public ResponseEntity<UsuarioResponseDTO> criar(@RequestBody @Valid UsuarioRequestDTO dto, UriComponentsBuilder uriBuilder) {
-        UsuarioResponseDTO response = criarUsuarioUseCase.executar(dto);
-        URI endereco = uriBuilder.path("/usuarios/{id}").buildAndExpand(response.id()).toUri();
-        return ResponseEntity.created(endereco).body(response);
     }
 
     @GetMapping
