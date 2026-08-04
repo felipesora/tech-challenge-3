@@ -22,12 +22,23 @@ public record UsuarioResponseDTO(
 
         boolean ativo
 ) {
+    public static String formatarCpf(String cpf) {
+        if (cpf == null || cpf.length() != 11) {
+            return cpf;
+        }
+
+        return cpf.replaceFirst(
+                "(\\d{3})(\\d{3})(\\d{3})(\\d{2})",
+                "$1.$2.$3-$4"
+        );
+    }
+
     public static UsuarioResponseDTO fromDomain(Usuario usuario) {
         return new UsuarioResponseDTO(
                 usuario.getId(),
                 usuario.getNome(),
                 usuario.getEmail(),
-                usuario.getCpf(),
+                formatarCpf(usuario.getCpf()),
                 usuario.getTipoUsuarioId(),
                 usuario.getAtivo()
         );

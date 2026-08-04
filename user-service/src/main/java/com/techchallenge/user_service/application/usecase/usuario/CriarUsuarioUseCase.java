@@ -22,12 +22,13 @@ public class CriarUsuarioUseCase {
 
     @Transactional
     public UsuarioResponseDTO executar(UsuarioRequestDTO request) {
+        String cpf = request.cpf().replaceAll("[^0-9]", "");
 
         if (usuarioGateway.existePorEmail(request.email())) {
             throw new BadRequestException("Já existe um usuário cadastrado com este e-mail.");
         }
 
-        if (usuarioGateway.existePorCpf(request.cpf())) {
+        if (usuarioGateway.existePorCpf(cpf)) {
             throw new BadRequestException("Já existe um usuário cadastrado com este CPF.");
         }
 
@@ -38,7 +39,7 @@ public class CriarUsuarioUseCase {
                 null,
                 request.nome(),
                 request.email(),
-                request.cpf(),
+                cpf,
                 request.senha(),
                 tipoUsuario.getId(),
                 true
