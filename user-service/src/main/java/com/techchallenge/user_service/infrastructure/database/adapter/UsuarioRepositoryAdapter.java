@@ -39,6 +39,16 @@ public class UsuarioRepositoryAdapter implements UsuarioGateway {
         return repository.findById(id).map(this::toDomain);
     }
 
+    @Override
+    public boolean existePorEmail(String email) {
+        return repository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existePorCpf(String cpf) {
+        return repository.existsByCpf(cpf);
+    }
+
     private UsuarioEntity toEntity(Usuario domain) {
         UsuarioEntity entity = new UsuarioEntity();
         entity.setId(domain.getId());

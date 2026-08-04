@@ -2,9 +2,9 @@ package com.techchallenge.user_service.infrastructure.api.controller;
 
 import com.techchallenge.user_service.application.dto.TipoUsuarioRequestDTO;
 import com.techchallenge.user_service.application.dto.TipoUsuarioResponseDTO;
-import com.techchallenge.user_service.application.usecase.usuario.BuscarTipoUsuarioPorIdUseCase;
-import com.techchallenge.user_service.application.usecase.usuario.CriarTipoUsuarioUseCase;
-import com.techchallenge.user_service.application.usecase.usuario.ListarTiposUsuarioUseCase;
+import com.techchallenge.user_service.application.usecase.tipoUsuario.BuscarTipoUsuarioPorIdUseCase;
+import com.techchallenge.user_service.application.usecase.tipoUsuario.CriarTipoUsuarioUseCase;
+import com.techchallenge.user_service.application.usecase.tipoUsuario.ListarTiposUsuarioUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;

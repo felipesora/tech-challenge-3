@@ -1,4 +1,4 @@
-package com.techchallenge.user_service.application.usecase.usuario;
+package com.techchallenge.user_service.application.usecase.tipoUsuario;
 
 import com.techchallenge.user_service.application.dto.TipoUsuarioResponseDTO;
 import com.techchallenge.user_service.application.gateway.TipoUsuarioGateway;

@@ -10,4 +10,6 @@ public interface UsuarioGateway {
     Usuario salvar(Usuario usuario);
     List<Usuario> buscarTodos();
     Optional<Usuario> buscarPorId(UUID id);
+    boolean existePorEmail(String email);
+    boolean existePorCpf(String cpf);
 }
