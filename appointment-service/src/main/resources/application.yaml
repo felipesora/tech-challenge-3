@@ -1,3 +1,29 @@
+server:
+  port: 8081
+
 spring:
   application:
     name: appointment-service
+  datasource:
+    url: jdbc:h2:mem:appointmentdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        default_schema: app
+        format_sql: true
+    show-sql: false
+
+jwt:
+  expiration: ${JWT_EXPIRATION:2592000000} # 30 dias
+  key: ${JWT_KEY:4e5f8a9c2d1b7f6a3c8e9d0f1a2b3c4d5e6f7a8b9c0d1e2f}
