@@ -6,6 +6,9 @@ import com.techchallenge.appointment_service.infrastructure.database.entity.Cons
 import com.techchallenge.appointment_service.infrastructure.database.repository.ConsultaRepository;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 @Component
 public class ConsultaRepositoryAdapter implements ConsultaGateway {
 
@@ -20,6 +23,11 @@ public class ConsultaRepositoryAdapter implements ConsultaGateway {
         ConsultaEntity entity = toEntity(consulta);
         ConsultaEntity salvo = repository.save(entity);
         return toDomain(salvo);
+    }
+
+    @Override
+    public boolean existeConsultaMedicoNoHorario(UUID medicoId, LocalDateTime dataHora) {
+        return repository.existsByMedicoIdAndDataHora(medicoId, dataHora);
     }
 
     private ConsultaEntity toEntity(Consulta domain) {
