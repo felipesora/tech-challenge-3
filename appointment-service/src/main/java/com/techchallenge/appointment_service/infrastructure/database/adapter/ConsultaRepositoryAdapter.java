@@ -7,6 +7,7 @@ import com.techchallenge.appointment_service.infrastructure.database.repository.
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -23,6 +24,13 @@ public class ConsultaRepositoryAdapter implements ConsultaGateway {
         ConsultaEntity entity = toEntity(consulta);
         ConsultaEntity salvo = repository.save(entity);
         return toDomain(salvo);
+    }
+
+    @Override
+    public List<Consulta> buscarTodos() {
+        return repository.findAll().stream()
+                .map(this::toDomain)
+                .toList();
     }
 
     @Override

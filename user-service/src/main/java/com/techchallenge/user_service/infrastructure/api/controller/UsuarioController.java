@@ -30,7 +30,7 @@ public class UsuarioController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('MEDICO','ENFERMEIRO')")
-    @Operation(summary = "Buscar usuário por ID", description = "Retorna uma lista contendo todos os usuários cadastrados.")
+    @Operation(summary = "Listar todos os usuários", description = "Retorna uma lista contendo todos os usuários cadastrados.")
     @ApiResponse(responseCode = "200", description = "Lista recuperada com sucesso")
     public ResponseEntity<List<UsuarioResponseDTO>> listarTodos() {
         return ResponseEntity.ok(listarUsuariosUseCase.executar());
@@ -42,7 +42,7 @@ public class UsuarioController {
     or
     #id == authentication.principal.id
     """)
-    @Operation(summary = "Buscar tipo de usuário por ID", description = "Busca os detalhes de um usuário específico utilizando o seu UUID.")
+    @Operation(summary = "Buscar usuário por ID", description = "Busca os detalhes de um usuário específico utilizando o seu UUID.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Usuário encontrado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
