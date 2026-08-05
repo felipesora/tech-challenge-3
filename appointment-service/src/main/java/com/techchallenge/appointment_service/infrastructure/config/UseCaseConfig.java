@@ -1,4 +1,4 @@
-package com.techchallenge.appointment_service.infrastructure.database.config;
+package com.techchallenge.appointment_service.infrastructure.config;
 
 import com.techchallenge.appointment_service.application.gateway.ConsultaGateway;
 import com.techchallenge.appointment_service.application.usecase.consulta.CriarConsultaUseCase;
