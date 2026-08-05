@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,7 @@ public class ConsultaController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('MEDICO','ENFERMEIRO')")
     @Operation(summary = "Cadastrar uma nova consulta", description = "Cria uma nova consulta, com paciente, médico e enfermeiro")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Consulta cadastrada com sucesso"),

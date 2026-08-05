@@ -1,7 +1,8 @@
-package com.techchallenge.user_service.infrastructure.security;
+package com.techchallenge.appointment_service.infrastructure.security;
+
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.techchallenge.user_service.infrastructure.exception.ErrorResponse;
+import com.techchallenge.appointment_service.infrastructure.exception.ErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
