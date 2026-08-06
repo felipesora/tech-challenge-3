@@ -2,6 +2,7 @@ package com.techchallenge.user_service.infrastructure.database.adapter;
 
 import com.techchallenge.user_service.application.gateway.TipoUsuarioGateway;
 import com.techchallenge.user_service.domain.entity.TipoUsuario;
+import com.techchallenge.user_service.domain.entity.TipoUsuarioEnum;
 import com.techchallenge.user_service.infrastructure.database.entity.TipoUsuarioEntity;
 import com.techchallenge.user_service.infrastructure.database.repository.TipoUsuarioRepository;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,11 @@ public class TipoUsuarioRepositoryAdapter implements TipoUsuarioGateway {
     @Override
     public Optional<TipoUsuario> buscarPorId(UUID id) {
         return repository.findById(id).map(this::toDomain);
+    }
+
+    @Override
+    public boolean existePorTipo(TipoUsuarioEnum tipo) {
+        return repository.existsByTipo(tipo);
     }
 
     private TipoUsuarioEntity toEntity(TipoUsuario domain) {

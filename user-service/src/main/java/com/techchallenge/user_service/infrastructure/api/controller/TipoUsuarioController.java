@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/tipos-usuario")
-@Tag(name = "Tipos de Usuário", description = "Endpoints para o gerenciamento de categorias de usuários (ex: MEDICO, ENFERMEIRO, PACIENTE)")
+@Tag(name = "Tipos de Usuário", description = "Endpoints para o gerenciamento de tipos de usuários (ex: MEDICO, ENFERMEIRO, PACIENTE)")
 public class TipoUsuarioController {
 
     private final CriarTipoUsuarioUseCase criarTipoUsuarioUseCase;
@@ -36,7 +36,7 @@ public class TipoUsuarioController {
     }
 
     @PostMapping
-    @Operation(summary = "Cadastrar um novo tipo de usuário", description = "Cria uma nova categoria de perfil no sistema (ex: MEDICO, ENFERMEIRO, PACIENTE).")
+    @Operation(summary = "Cadastrar um novo tipo de usuário", description = "Cria um novo tipo de usuario no sistema (ex: MEDICO, ENFERMEIRO, PACIENTE).")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Tipo de usuário cadastrado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Dados inválidos fornecidos")
@@ -48,7 +48,7 @@ public class TipoUsuarioController {
     }
 
     @GetMapping
-    @Operation(summary = "Listar todos os tipos de usuários", description = "Retorna uma lista com todas os tipos cadastrados, ativos e inativos.")
+    @Operation(summary = "Listar todos os tipos de usuários", description = "Retorna uma lista com todos os tipos cadastrados, ativos e inativos.")
     @ApiResponse(responseCode = "200", description = "Lista recuperada com sucesso")
     public ResponseEntity<List<TipoUsuarioResponseDTO>> listarTodos() {
         return ResponseEntity.ok(listarTiposUsuarioUseCase.executar());

@@ -1,4 +1,4 @@
-package com.techchallenge.user_service.infrastructure.exception;
+package com.techchallenge.appointment_service.infrastructure.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
