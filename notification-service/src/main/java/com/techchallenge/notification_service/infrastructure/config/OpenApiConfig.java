@@ -1,4 +1,4 @@
-package com.techchallenge.appointment_service.infrastructure.config;
+package com.techchallenge.notification_service.infrastructure.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -15,23 +15,23 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
+
         return new OpenAPI()
                 .info(new Info()
-                        .title("Appointment Service")
+                        .title("Notification Service")
                         .version("1.0.0")
                         .description("""
-                        Microsserviço responsável pelo gerenciamento de consultas médicas do sistema.
-                                
-                        Este serviço fornece funcionalidades para:
-                        * Agendamento de consultas;
-                        * Consulta de consultas agendadas;
-                        * Atualização de consultas;
-                        * Cancelamento de consultas;
-                        * Consulta do histórico por meio de GraphQL;
-                        * Publicação de eventos para o serviço de notificações via RabbitMQ.
-                                
-                        O Appointment Service faz parte da arquitetura de microsserviços do Tech Challenge e é responsável por toda a regra de negócio relacionada ao agendamento de consultas entre médicos, enfermeiros e pacientes.
+                        Microsserviço responsável pelo gerenciamento e envio de notificações relacionadas às consultas médicas.
                         
+                        Este serviço fornece funcionalidades para:
+                        * Receber eventos de consultas via RabbitMQ;
+                        * Processar notificações de criação, atualização e cancelamento de consultas;
+                        * Registrar o histórico de notificações enviadas;
+                        * Gerenciar o status das notificações (PENDENTE, ENVIADA ou ERRO);
+                        * Simular o envio de lembretes aos pacientes.
+
+                        O Notification Service faz parte da arquitetura de microsserviços do Tech Challenge e é responsável por processar eventos publicados pelo Appointment Service, desacoplando a lógica de notificações do gerenciamento das consultas.
+                                
                         **Integrantes do Grupo:**
                         * Felipe Ulson Sora - RM370766
                         * Gabriel Alberto Ferreira Pinto - RM374005
@@ -53,5 +53,6 @@ public class OpenApiConfig {
                                 .scheme("bearer")
                                 .bearerFormat("JWT")
                 );
+
     }
 }

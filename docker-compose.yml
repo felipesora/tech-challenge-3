@@ -60,6 +60,25 @@ services:
       postgres:
         condition: service_healthy
 
+  notification-service:
+      build:
+        context: ./notification-service
+        dockerfile: Dockerfile
+      container_name: notification-service
+      restart: always
+      environment:
+        DB_URL: jdbc:postgresql://postgres:5432/notifications
+        DB_USERNAME: fiap_user
+        DB_PASSWORD: 123456
+        JWT_KEY: 4e5f8a9c2d1b7f6a3c8e9d0f1a2b3c4d5e6f7a8b9c0d1e2f
+      ports:
+        - "8082:8082"
+      networks:
+        - tech-challenge-network
+      depends_on:
+        postgres:
+          condition: service_healthy
+
 
 networks:
   tech-challenge-network:
