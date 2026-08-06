@@ -3,10 +3,13 @@ package com.techchallenge.notification_service.infrastructure.api.controller;
 import com.techchallenge.notification_service.application.dto.NotificacaoResponseDTO;
 import com.techchallenge.notification_service.application.usecase.notificacao.BuscarNotificacoesPorPacienteId;
 import com.techchallenge.notification_service.application.usecase.notificacao.ListarNotificacoesUseCase;
+import com.techchallenge.notification_service.infrastructure.security.AuthenticatedUser;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,7 +33,7 @@ public class NotificacaoController {
     }
 
     @GetMapping
-//    @PreAuthorize("hasRole('ENFERMEIRO')")
+    @PreAuthorize("hasRole('ENFERMEIRO')")
     @Operation(summary = "Listar todas as notificações", description = "Retorna uma lista com todas as notificações.")
     @ApiResponse(responseCode = "200", description = "Lista recuperada com sucesso")
     public ResponseEntity<List<NotificacaoResponseDTO>> listarTodas() {
@@ -38,9 +41,11 @@ public class NotificacaoController {
     }
 
     @GetMapping("/paciente/{id}")
+    @PreAuthorize("hasAnyRole('ENFERMEIRO','PACIENTE')")
     @Operation(summary = "Buscar notificações por paciente", description = "Retorna todas as notificações de um paciente.")
     @ApiResponse(responseCode = "200", description = "Notificações recuperadas com sucesso")
-    public ResponseEntity<List<NotificacaoResponseDTO>> buscarPorPacienteId(@PathVariable UUID id) {
-        return ResponseEntity.ok(buscarNotificacoesPorPacienteId.executar(id));
+    public ResponseEntity<List<NotificacaoResponseDTO>> buscarPorPacienteId(@PathVariable UUID id, Authentication authentication) {
+        AuthenticatedUser usuario = (AuthenticatedUser) authentication.getPrincipal();
+        return ResponseEntity.ok(buscarNotificacoesPorPacienteId.executar(id, usuario));
     }
 }
