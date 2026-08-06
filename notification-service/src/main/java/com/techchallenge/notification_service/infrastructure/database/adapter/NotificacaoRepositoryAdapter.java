@@ -7,6 +7,7 @@ import com.techchallenge.notification_service.infrastructure.database.repository
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class NotificacaoRepositoryAdapter implements NotificacaoGateway {
@@ -20,6 +21,14 @@ public class NotificacaoRepositoryAdapter implements NotificacaoGateway {
     @Override
     public List<Notificacao> buscarTodos() {
         return repository.findAll().stream()
+                .map(this::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Notificacao> buscarNotificacoesPorPacienteId(UUID id) {
+        return repository.findByPacienteId(id)
+                .stream()
                 .map(this::toDomain)
                 .toList();
     }
