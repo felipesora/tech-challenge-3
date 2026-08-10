@@ -1,11 +1,10 @@
 package com.techchallenge.notification_service.infrastructure.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.access.AccessDeniedException;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -13,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CustomAccessDeniedHandlerTest {
 
     private final CustomAccessDeniedHandler handler =
-            new CustomAccessDeniedHandler(new ObjectMapper().registerModule(new JavaTimeModule()));
+            new CustomAccessDeniedHandler(new JsonMapper());
 
     @Test
     void deveResponderComStatus403EMensagemPadrao() throws Exception {

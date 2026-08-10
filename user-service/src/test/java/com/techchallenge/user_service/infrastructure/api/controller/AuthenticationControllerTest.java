@@ -1,8 +1,5 @@
 package com.techchallenge.user_service.infrastructure.api.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.techchallenge.user_service.application.dto.LoginRequestDTO;
 import com.techchallenge.user_service.application.dto.TokenResponseDTO;
 import com.techchallenge.user_service.application.dto.UsuarioRequestDTO;
@@ -12,9 +9,10 @@ import com.techchallenge.user_service.application.usecase.auth.RealizarLoginUseC
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.UUID;
 
@@ -29,16 +27,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AuthenticationControllerTest {
 
     private MockMvc mockMvc;
-    private final ObjectMapper objectMapper = new ObjectMapper()
-            .registerModule(new JavaTimeModule())
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    private final JsonMapper objectMapper = new JsonMapper();
     private final CriarUsuarioUseCase criarUsuarioUseCase = mock(CriarUsuarioUseCase.class);
     private final RealizarLoginUseCase realizarLoginUseCase = mock(RealizarLoginUseCase.class);
 
     @BeforeEach
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(new AuthenticationController(criarUsuarioUseCase, realizarLoginUseCase))
-                .setMessageConverters(new MappingJackson2HttpMessageConverter(objectMapper))
+                .setMessageConverters(new JacksonJsonHttpMessageConverter(objectMapper))
                 .build();
     }
 

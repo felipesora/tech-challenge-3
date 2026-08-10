@@ -1,12 +1,11 @@
 package com.techchallenge.appointment_service.infrastructure.security;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.authentication.BadCredentialsException;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -14,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class CustomAuthenticationEntryPointTest {
 
     private final CustomAuthenticationEntryPoint entryPoint =
-            new CustomAuthenticationEntryPoint(new ObjectMapper().registerModule(new JavaTimeModule()));
+            new CustomAuthenticationEntryPoint(new JsonMapper());
 
     @Test
     void deveResponderComStatus401EMensagemPadrao() throws Exception {

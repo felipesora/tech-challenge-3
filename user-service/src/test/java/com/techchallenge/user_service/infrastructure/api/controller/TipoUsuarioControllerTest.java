@@ -1,8 +1,5 @@
 package com.techchallenge.user_service.infrastructure.api.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.techchallenge.user_service.application.dto.TipoUsuarioRequestDTO;
 import com.techchallenge.user_service.application.dto.TipoUsuarioResponseDTO;
 import com.techchallenge.user_service.application.usecase.tipoUsuario.BuscarTipoUsuarioPorIdUseCase;
@@ -12,9 +9,10 @@ import com.techchallenge.user_service.domain.entity.TipoUsuarioEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
 import java.util.UUID;
@@ -31,9 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class TipoUsuarioControllerTest {
 
     private MockMvc mockMvc;
-    private final ObjectMapper objectMapper = new ObjectMapper()
-            .registerModule(new JavaTimeModule())
-            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+    private final JsonMapper objectMapper = new JsonMapper();
     private final CriarTipoUsuarioUseCase criarUseCase = mock(CriarTipoUsuarioUseCase.class);
     private final ListarTiposUsuarioUseCase listarUseCase = mock(ListarTiposUsuarioUseCase.class);
     private final BuscarTipoUsuarioPorIdUseCase buscarUseCase = mock(BuscarTipoUsuarioPorIdUseCase.class);
@@ -41,7 +37,7 @@ class TipoUsuarioControllerTest {
     @BeforeEach
     void setup() {
         mockMvc = MockMvcBuilders.standaloneSetup(new TipoUsuarioController(criarUseCase, listarUseCase, buscarUseCase))
-                .setMessageConverters(new MappingJackson2HttpMessageConverter(objectMapper))
+                .setMessageConverters(new JacksonJsonHttpMessageConverter(objectMapper))
                 .build();
     }
 
