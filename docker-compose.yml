@@ -1,5 +1,4 @@
 services:
-
   postgres:
     image: postgres:16
     container_name: postgres-db
@@ -21,6 +20,21 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - tech-challenge-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   user-service:
     build:
@@ -52,6 +66,7 @@ services:
       DB_USERNAME: fiap_user
       DB_PASSWORD: 123456
       JWT_KEY: 4e5f8a9c2d1b7f6a3c8e9d0f1a2b3c4d5e6f7a8b9c0d1e2f
+      SPRING_RABBITMQ_HOST: rabbitmq
     ports:
       - "8081:8081"
     networks:
@@ -59,26 +74,30 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   notification-service:
-      build:
-        context: ./notification-service
-        dockerfile: Dockerfile
-      container_name: notification-service
-      restart: always
-      environment:
-        DB_URL: jdbc:postgresql://postgres:5432/notifications
-        DB_USERNAME: fiap_user
-        DB_PASSWORD: 123456
-        JWT_KEY: 4e5f8a9c2d1b7f6a3c8e9d0f1a2b3c4d5e6f7a8b9c0d1e2f
-      ports:
-        - "8082:8082"
-      networks:
-        - tech-challenge-network
-      depends_on:
-        postgres:
-          condition: service_healthy
-
+    build:
+      context: ./notification-service
+      dockerfile: Dockerfile
+    container_name: notification-service
+    restart: always
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/notifications
+      DB_USERNAME: fiap_user
+      DB_PASSWORD: 123456
+      JWT_KEY: 4e5f8a9c2d1b7f6a3c8e9d0f1a2b3c4d5e6f7a8b9c0d1e2f
+      SPRING_RABBITMQ_HOST: rabbitmq
+    ports:
+      - "8082:8082"
+    networks:
+      - tech-challenge-network
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
 networks:
   tech-challenge-network:

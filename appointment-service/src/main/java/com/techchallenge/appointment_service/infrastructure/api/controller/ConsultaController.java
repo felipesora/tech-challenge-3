@@ -3,6 +3,7 @@ package com.techchallenge.appointment_service.infrastructure.api.controller;
 import com.techchallenge.appointment_service.application.dto.ConsultaRequestDTO;
 import com.techchallenge.appointment_service.application.dto.ConsultaResponseDTO;
 import com.techchallenge.appointment_service.application.usecase.consulta.CriarConsultaUseCase;
+import com.techchallenge.appointment_service.application.usecase.consulta.EditarConsultaUseCase;
 import com.techchallenge.appointment_service.application.usecase.consulta.ListarConsultasUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -16,6 +17,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/consultas")
@@ -24,10 +26,12 @@ public class ConsultaController {
 
     private final CriarConsultaUseCase criarConsultaUseCase;
     private final ListarConsultasUseCase listarConsultasUseCase;
+    private final EditarConsultaUseCase editarConsultaUseCase;
 
-    public ConsultaController(CriarConsultaUseCase criarConsultaUseCase, ListarConsultasUseCase listarConsultasUseCase) {
+    public ConsultaController(CriarConsultaUseCase criarConsultaUseCase, ListarConsultasUseCase listarConsultasUseCase, EditarConsultaUseCase editarConsultaUseCase) {
         this.criarConsultaUseCase = criarConsultaUseCase;
         this.listarConsultasUseCase = listarConsultasUseCase;
+        this.editarConsultaUseCase = editarConsultaUseCase;
     }
 
     @PostMapping
@@ -49,5 +53,12 @@ public class ConsultaController {
     @ApiResponse(responseCode = "200", description = "Lista recuperada com sucesso")
     public ResponseEntity<List<ConsultaResponseDTO>> listarTodas() {
         return ResponseEntity.ok(listarConsultasUseCase.executar());
+    }
+
+    @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('MEDICO', 'ENFERMEIRO')")
+    @Operation(summary = "Editar uma consulta")
+    public ResponseEntity<ConsultaResponseDTO> editar(@PathVariable UUID id, @RequestBody @Valid ConsultaRequestDTO request) {
+        return ResponseEntity.ok(editarConsultaUseCase.executar(id, request));
     }
 }
