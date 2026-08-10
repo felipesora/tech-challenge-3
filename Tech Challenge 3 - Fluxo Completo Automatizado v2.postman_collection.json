@@ -1,0 +1,473 @@
+{
+  "info": {
+    "_postman_id": "a33c6bbf-730f-4bd5-a312-14b04f4eef41",
+    "name": "Tech Challenge 3 - Fluxo Completo Automatizado v2",
+    "description": "Collection com os scripts de teste ajustados para consumir os dados do Seeder.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "3466333"
+  },
+  "item": [
+    {
+      "name": "1. Setup (Buscar Tipos de Usuário)",
+      "item": [
+        {
+          "name": "1.1 Buscar Tipos Existentes (Seeder)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "jsonData.forEach(function(item) {",
+                  "    if(item.tipo === 'PACIENTE') pm.environment.set('ID_TIPO_PACIENTE', item.id_tipo_usuario);",
+                  "    if(item.tipo === 'MEDICO') pm.environment.set('ID_TIPO_MEDICO', item.id_tipo_usuario);",
+                  "    if(item.tipo === 'ENFERMEIRO') pm.environment.set('ID_TIPO_ENFERMEIRO', item.id_tipo_usuario);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/tipos-usuario",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "tipos-usuario"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "noauth"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Setup (Usuários)",
+      "item": [
+        {
+          "name": "2.1 Criar Paciente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"ID_USUARIO_PACIENTE\", jsonData.id_usuario);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Jeniffer Bandeira\",\n  \"email\": \"jeniffer@email.com\",\n  \"cpf\": \"111.222.333-44\",\n  \"senha\": \"senhaforte\",\n  \"id_tipo\": \"{{ID_TIPO_PACIENTE}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.2 Criar Enfermeira",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"ID_USUARIO_ENFERMEIRO\", jsonData.id_usuario);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Andressa Felippes\",\n  \"email\": \"andressa@email.com\",\n  \"cpf\": \"222.333.444-55\",\n  \"senha\": \"senhaforte\",\n  \"id_tipo\": \"{{ID_TIPO_ENFERMEIRO}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "2.3 Criar Médico",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"ID_USUARIO_MEDICO\", jsonData.id_usuario);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Dr. Marcos Gomes\",\n  \"email\": \"marcos@email.com\",\n  \"cpf\": \"333.444.555-66\",\n  \"senha\": \"senhaforte\",\n  \"id_tipo\": \"{{ID_TIPO_MEDICO}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "noauth"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Autenticação",
+      "item": [
+        {
+          "name": "3.1 Fazer Login (Enfermeira)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"TOKEN_JWT\", jsonData.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"andressa@email.com\",\n  \"senha\": \"senhaforte\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "noauth"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Fluxo Core",
+      "item": [
+        {
+          "name": "4.1 Agendar Consulta",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"ID_CONSULTA\", jsonData.id_consulta);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_paciente\": \"{{ID_USUARIO_PACIENTE}}\",\n  \"id_medico\": \"{{ID_USUARIO_MEDICO}}\",\n  \"id_enfermeiro\": \"{{ID_USUARIO_ENFERMEIRO}}\",\n  \"data_hora\": \"2026-08-15T14:30:00\",\n  \"status\": \"AGENDADA\",\n  \"observacoes\": \"Primeira consulta de rotina\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8081/consultas",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "consultas"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4.2 Validar Notificação (LEMBRETE)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8082/notificacoes/paciente/{{ID_USUARIO_PACIENTE}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "notificacoes",
+                "paciente",
+                "{{ID_USUARIO_PACIENTE}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4.3 Editar Consulta",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_paciente\": \"{{ID_USUARIO_PACIENTE}}\",\n  \"id_medico\": \"{{ID_USUARIO_MEDICO}}\",\n  \"id_enfermeiro\": \"{{ID_USUARIO_ENFERMEIRO}}\",\n  \"data_hora\": \"2026-08-15T15:30:00\",\n  \"status\": \"CONFIRMADA\",\n  \"observacoes\": \"Horário remarcado e consulta confirmada.\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8081/consultas/{{ID_CONSULTA}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "consultas",
+                "{{ID_CONSULTA}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4.4 Validar Notificação (ALTERAÇÃO)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "setTimeout(function(){}, 2000);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8082/notificacoes/paciente/{{ID_USUARIO_PACIENTE}}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8082",
+              "path": [
+                "notificacoes",
+                "paciente",
+                "{{ID_USUARIO_PACIENTE}}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "4.5 Consultar Histórico GraphQL",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query {\n  historicoPaciente(pacienteId: \"{{ID_USUARIO_PACIENTE}}\") {\n    id\n    dataHora\n    status\n    observacoes\n  }\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8081/graphql",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "graphql"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{TOKEN_JWT}}",
+        "type": "string"
+      }
+    ]
+  }
+}
