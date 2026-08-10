@@ -5,10 +5,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface ConsultaRepository extends JpaRepository<ConsultaEntity, UUID> {
 
     boolean existsByMedicoIdAndDataHora(UUID medicoId, LocalDateTime dataHora);
+    List<ConsultaEntity> findByPacienteId(UUID pacienteId);
+    List<ConsultaEntity> findByPacienteIdAndDataHoraAfter(UUID pacienteId, LocalDateTime dataHora);
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -36,6 +37,21 @@ public class ConsultaRepositoryAdapter implements ConsultaGateway {
     @Override
     public boolean existeConsultaMedicoNoHorario(UUID medicoId, LocalDateTime dataHora) {
         return repository.existsByMedicoIdAndDataHora(medicoId, dataHora);
+    }
+
+    @Override
+    public List<Consulta> buscarPorPacienteId(UUID pacienteId) {
+        return repository.findByPacienteId(pacienteId).stream().map(this::toDomain).toList();
+    }
+
+    @Override
+    public List<Consulta> buscarConsultasFuturasPorPacienteId(UUID pacienteId, LocalDateTime dataHora) {
+        return repository.findByPacienteIdAndDataHoraAfter(pacienteId, dataHora).stream().map(this::toDomain).toList();
+    }
+
+    @Override
+    public Optional<Consulta> buscarPorId(UUID id) {
+        return repository.findById(id).map(this::toDomain);
     }
 
     private ConsultaEntity toEntity(Consulta domain) {

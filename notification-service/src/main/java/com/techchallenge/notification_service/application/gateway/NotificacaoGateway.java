@@ -9,4 +9,6 @@ public interface NotificacaoGateway {
     List<Notificacao> buscarTodos();
 
     List<Notificacao> buscarNotificacoesPorPacienteId(UUID id);
+
+    Notificacao salvar(Notificacao notificacao);
 }

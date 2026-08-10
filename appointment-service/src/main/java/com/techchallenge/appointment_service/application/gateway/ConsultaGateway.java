@@ -4,6 +4,7 @@ import com.techchallenge.appointment_service.domain.entity.Consulta;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ConsultaGateway {
@@ -12,4 +13,10 @@ public interface ConsultaGateway {
     List<Consulta> buscarTodos();
 
     boolean existeConsultaMedicoNoHorario(UUID medicoId, LocalDateTime dataHora);
+
+    List<Consulta> buscarPorPacienteId(UUID pacienteId);
+
+    List<Consulta> buscarConsultasFuturasPorPacienteId(UUID pacienteId, LocalDateTime dataHora);
+
+    Optional<Consulta> buscarPorId(UUID id);
 }

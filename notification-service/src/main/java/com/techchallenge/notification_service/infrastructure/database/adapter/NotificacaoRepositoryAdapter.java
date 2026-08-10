@@ -33,6 +33,13 @@ public class NotificacaoRepositoryAdapter implements NotificacaoGateway {
                 .toList();
     }
 
+    @Override
+    public Notificacao salvar(Notificacao notificacao) {
+        NotificacaoEntity entity = toEntity(notificacao);
+        NotificacaoEntity salvo = repository.save(entity);
+        return toDomain(salvo);
+    }
+
     private NotificacaoEntity toEntity(Notificacao domain) {
         NotificacaoEntity entity = new NotificacaoEntity();
         entity.setId(domain.getId());

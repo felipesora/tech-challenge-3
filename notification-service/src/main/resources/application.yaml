@@ -4,6 +4,7 @@ server:
 spring:
   application:
     name: notification-service
+
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5433/notifications}
     username: ${DB_USERNAME:fiap_user}
@@ -11,6 +12,7 @@ spring:
     driver-class-name: org.postgresql.Driver
     hikari:
       connection-init-sql: CREATE SCHEMA IF NOT EXISTS app;
+
   jpa:
     hibernate:
       ddl-auto: update

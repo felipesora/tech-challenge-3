@@ -4,6 +4,7 @@ server:
 spring:
   application:
     name: appointment-service
+
   datasource:
     url: ${DB_URL:jdbc:postgresql://localhost:5433/appointments}
     username: ${DB_USERNAME:fiap_user}
