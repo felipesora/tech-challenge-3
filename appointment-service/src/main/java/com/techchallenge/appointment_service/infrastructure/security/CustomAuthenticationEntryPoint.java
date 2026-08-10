@@ -1,7 +1,7 @@
 package com.techchallenge.appointment_service.infrastructure.security;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import com.techchallenge.appointment_service.infrastructure.exception.ErrorResponse;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
