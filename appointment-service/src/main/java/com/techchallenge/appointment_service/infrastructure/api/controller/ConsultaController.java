@@ -56,7 +56,7 @@ public class ConsultaController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('MEDICO', 'ENFERMEIRO')")
+    @PreAuthorize("hasAnyRole('MEDICO'')")
     @Operation(summary = "Editar uma consulta")
     public ResponseEntity<ConsultaResponseDTO> editar(@PathVariable UUID id, @RequestBody @Valid ConsultaRequestDTO request) {
         return ResponseEntity.ok(editarConsultaUseCase.executar(id, request));
