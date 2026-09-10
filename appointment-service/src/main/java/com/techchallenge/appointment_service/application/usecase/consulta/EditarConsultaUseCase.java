@@ -4,6 +4,7 @@ import com.techchallenge.appointment_service.application.dto.ConsultaRequestDTO;
 import com.techchallenge.appointment_service.application.dto.ConsultaResponseDTO;
 import com.techchallenge.appointment_service.application.gateway.ConsultaGateway;
 import com.techchallenge.appointment_service.domain.entity.Consulta;
+import com.techchallenge.appointment_service.infrastructure.exception.BadRequestException;
 import com.techchallenge.appointment_service.infrastructure.exception.EntityNotFoundException;
 import com.techchallenge.appointment_service.infrastructure.messaging.NotificationEventDTO;
 import com.techchallenge.appointment_service.infrastructure.messaging.RabbitMQConfig;
@@ -23,7 +24,12 @@ public class EditarConsultaUseCase {
 
     public ConsultaResponseDTO executar(UUID id, ConsultaRequestDTO dto) {
         Consulta consulta = gateway.buscarPorId(id)
-                .orElseThrow(() -> new EntityNotFoundException("Nenhuma consulta foi encontrada com o ID informado: " + id));
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Nenhuma consulta foi encontrada com o ID informado: " + id));
+
+        if (gateway.existeConsultaMedicoNoHorarioExcluindoId(dto.medicoId(), dto.dataHora(), id)) {
+            throw new BadRequestException("O médico já possui outra consulta agendada para esse horário.");
+        }
 
         consulta.setDataHora(dto.dataHora());
         consulta.setStatus(dto.status());
@@ -34,7 +40,12 @@ public class EditarConsultaUseCase {
 
         ConsultaResponseDTO response = ConsultaResponseDTO.fromDomain(gateway.salvar(consulta));
 
-        var evento = new NotificationEventDTO(response.id(), response.pacienteId(), response.dataHora(), "ALTERACAO");
+        var evento = new NotificationEventDTO(
+                response.id(),
+                response.pacienteId(),
+                response.dataHora(),
+                "ALTERACAO"
+        );
 
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.QUEUE_NOTIFICATION,

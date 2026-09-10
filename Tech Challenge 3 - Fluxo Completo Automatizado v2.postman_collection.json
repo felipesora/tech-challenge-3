@@ -2,7 +2,7 @@
   "info": {
     "_postman_id": "a33c6bbf-730f-4bd5-a312-14b04f4eef41",
     "name": "Tech Challenge 3 - Fluxo Completo Automatizado v2",
-    "description": "Collection com os scripts de teste ajustados para consumir os dados do Seeder.",
+    "description": "Collection para execução do fluxo completo, incluindo validações de segurança do perfil PACIENTE.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "3466333"
   },
@@ -452,6 +452,168 @@
               "port": "8081",
               "path": [
                 "graphql"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "5. Segurança - Paciente",
+      "item": [
+        {
+          "name": "5.1 Fazer Login (Paciente)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login do paciente realizado com sucesso', function () { pm.response.to.have.status(200); });",
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set('TOKEN_JWT_PACIENTE', jsonData.token);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"jeniffer@email.com\",\n  \"senha\": \"senhaforte\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5.2 Paciente consulta o próprio histórico",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Paciente pode consultar o próprio histórico', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.errors).to.be.undefined;",
+                  "    pm.expect(jsonData.data.historicoPaciente).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query {\n  historicoPaciente(pacienteId: \"{{ID_USUARIO_PACIENTE}}\") {\n    id\n    pacienteId\n    dataHora\n    status\n  }\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8081/graphql",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "graphql"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN_JWT_PACIENTE}}",
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "5.3 Paciente NÃO consulta histórico de outro paciente",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set('OUTRO_PACIENTE_ID', pm.variables.replaceIn('{{$guid}}'));"
+                ],
+                "type": "text/javascript"
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Acesso ao histórico de outro paciente é bloqueado', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.expect(jsonData.errors).to.be.an('array').that.is.not.empty;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "graphql",
+              "graphql": {
+                "query": "query {\n  historicoPaciente(pacienteId: \"{{OUTRO_PACIENTE_ID}}\") {\n    id\n    pacienteId\n    dataHora\n    status\n  }\n}",
+                "variables": ""
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8081/graphql",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8081",
+              "path": [
+                "graphql"
+              ]
+            },
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{TOKEN_JWT_PACIENTE}}",
+                  "type": "string"
+                }
               ]
             }
           },

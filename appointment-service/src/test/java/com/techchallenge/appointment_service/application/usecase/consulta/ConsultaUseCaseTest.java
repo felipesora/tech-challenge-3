@@ -9,9 +9,11 @@ import com.techchallenge.appointment_service.infrastructure.exception.BadRequest
 import com.techchallenge.appointment_service.infrastructure.exception.EntityNotFoundException;
 import com.techchallenge.appointment_service.infrastructure.messaging.NotificationEventDTO;
 import com.techchallenge.appointment_service.infrastructure.messaging.RabbitMQConfig;
+import com.techchallenge.appointment_service.infrastructure.security.AuthenticatedUser;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -229,7 +231,8 @@ class ConsultaUseCaseTest {
 
         when(gateway.buscarConsultasFuturasPorPacienteId(eq(pacienteId), any(LocalDateTime.class))).thenReturn(List.of(consulta));
 
-        List<ConsultaResponseDTO> response = useCase.executar(pacienteId);
+        AuthenticatedUser usuario = new AuthenticatedUser(pacienteId, "paciente@email.com", "PACIENTE");
+        List<ConsultaResponseDTO> response = useCase.executar(pacienteId, usuario);
 
         assertEquals(1, response.size());
         assertEquals(consulta.getId(), response.get(0).id());
@@ -255,11 +258,81 @@ class ConsultaUseCaseTest {
 
         when(gateway.buscarPorPacienteId(pacienteId)).thenReturn(List.of(consulta));
 
-        List<ConsultaResponseDTO> response = useCase.executar(pacienteId);
+        AuthenticatedUser usuario = new AuthenticatedUser(pacienteId, "paciente@email.com", "PACIENTE");
+        List<ConsultaResponseDTO> response = useCase.executar(pacienteId, usuario);
 
         assertEquals(1, response.size());
         assertEquals(consulta.getId(), response.get(0).id());
         assertEquals(pacienteId, response.get(0).pacienteId());
         verify(gateway).buscarPorPacienteId(pacienteId);
     }
+
+
+    @Test
+    void deveNegarHistoricoQuandoPacienteTentaAcessarOutroPaciente() {
+        BuscarHistoricoPacienteUseCase useCase = new BuscarHistoricoPacienteUseCase(gateway);
+        UUID pacienteConsultado = UUID.randomUUID();
+        AuthenticatedUser usuario = new AuthenticatedUser(UUID.randomUUID(), "paciente@email.com", "PACIENTE");
+
+        assertThrows(AccessDeniedException.class, () -> useCase.executar(pacienteConsultado, usuario));
+        verify(gateway, never()).buscarPorPacienteId(pacienteConsultado);
+    }
+
+    @Test
+    void deveNegarConsultasFuturasQuandoPacienteTentaAcessarOutroPaciente() {
+        BuscarConsultasFuturasPacienteUseCase useCase = new BuscarConsultasFuturasPacienteUseCase(gateway);
+        UUID pacienteConsultado = UUID.randomUUID();
+        AuthenticatedUser usuario = new AuthenticatedUser(UUID.randomUUID(), "paciente@email.com", "PACIENTE");
+
+        assertThrows(AccessDeniedException.class, () -> useCase.executar(pacienteConsultado, usuario));
+        verify(gateway, never()).buscarConsultasFuturasPorPacienteId(eq(pacienteConsultado), any(LocalDateTime.class));
+    }
+
+    @Test
+    void devePermitirMedicoConsultarHistoricoDeOutroPaciente() {
+        BuscarHistoricoPacienteUseCase useCase = new BuscarHistoricoPacienteUseCase(gateway);
+        UUID pacienteId = UUID.randomUUID();
+        AuthenticatedUser medico = new AuthenticatedUser(UUID.randomUUID(), "medico@email.com", "MEDICO");
+
+        when(gateway.buscarPorPacienteId(pacienteId)).thenReturn(List.of());
+
+        useCase.executar(pacienteId, medico);
+
+        verify(gateway).buscarPorPacienteId(pacienteId);
+    }
+
+    @Test
+    void deveLancarExcecaoAoEditarParaHorarioJaOcupadoPeloMedico() {
+        EditarConsultaUseCase useCase = new EditarConsultaUseCase(gateway, rabbitTemplate);
+        UUID id = UUID.randomUUID();
+        UUID medicoId = UUID.randomUUID();
+        LocalDateTime novoHorario = LocalDateTime.of(2026, 8, 20, 14, 30);
+        Consulta consultaExistente = new Consulta(
+                id,
+                UUID.randomUUID(),
+                medicoId,
+                UUID.randomUUID(),
+                LocalDateTime.of(2026, 8, 10, 9, 0),
+                StatusConsulta.AGENDADA,
+                "Anterior",
+                LocalDateTime.now().minusDays(1),
+                LocalDateTime.now().minusDays(1)
+        );
+        ConsultaRequestDTO dto = new ConsultaRequestDTO(
+                consultaExistente.getPacienteId(),
+                medicoId,
+                UUID.randomUUID(),
+                novoHorario,
+                StatusConsulta.CONFIRMADA,
+                "Atualizada"
+        );
+
+        when(gateway.buscarPorId(id)).thenReturn(Optional.of(consultaExistente));
+        when(gateway.existeConsultaMedicoNoHorarioExcluindoId(medicoId, novoHorario, id)).thenReturn(true);
+
+        assertThrows(BadRequestException.class, () -> useCase.executar(id, dto));
+        verify(gateway, never()).salvar(any(Consulta.class));
+        verifyNoInteractions(rabbitTemplate);
+    }
+
 }

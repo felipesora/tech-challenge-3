@@ -142,4 +142,20 @@ class ConsultaRepositoryAdapterTest {
         assertEquals(id, resultado.get().getId());
         assertTrue(existe);
     }
+
+
+    @Test
+    void deveVerificarConflitoDeHorarioExcluindoAConsultaAtual() {
+        UUID consultaId = UUID.randomUUID();
+        UUID medicoId = UUID.randomUUID();
+        LocalDateTime dataHora = LocalDateTime.of(2026, 8, 22, 10, 0);
+
+        when(repository.existsByMedicoIdAndDataHoraAndIdNot(medicoId, dataHora, consultaId)).thenReturn(true);
+
+        boolean existe = adapter.existeConsultaMedicoNoHorarioExcluindoId(medicoId, dataHora, consultaId);
+
+        assertTrue(existe);
+        verify(repository).existsByMedicoIdAndDataHoraAndIdNot(medicoId, dataHora, consultaId);
+    }
+
 }
