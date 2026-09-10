@@ -40,13 +40,24 @@ public class ConsultaRepositoryAdapter implements ConsultaGateway {
     }
 
     @Override
+    public boolean existeConsultaMedicoNoHorarioExcluindoId(UUID medicoId, LocalDateTime dataHora, UUID consultaId) {
+        return repository.existsByMedicoIdAndDataHoraAndIdNot(medicoId, dataHora, consultaId);
+    }
+
+    @Override
     public List<Consulta> buscarPorPacienteId(UUID pacienteId) {
-        return repository.findByPacienteId(pacienteId).stream().map(this::toDomain).toList();
+        return repository.findByPacienteId(pacienteId)
+                .stream()
+                .map(this::toDomain)
+                .toList();
     }
 
     @Override
     public List<Consulta> buscarConsultasFuturasPorPacienteId(UUID pacienteId, LocalDateTime dataHora) {
-        return repository.findByPacienteIdAndDataHoraAfter(pacienteId, dataHora).stream().map(this::toDomain).toList();
+        return repository.findByPacienteIdAndDataHoraAfter(pacienteId, dataHora)
+                .stream()
+                .map(this::toDomain)
+                .toList();
     }
 
     @Override
