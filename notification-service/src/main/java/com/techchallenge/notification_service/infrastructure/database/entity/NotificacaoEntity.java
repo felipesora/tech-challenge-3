@@ -40,7 +40,7 @@ public class NotificacaoEntity {
     @Column(nullable = false, name = "status_notificacao")
     private StatusNotificacao status;
 
-    @Column(nullable = false, name = "enviado_em")
+    @Column(name = "enviado_em")
     private LocalDateTime enviadoEm;
 
     @Column(nullable = false, name = "criado_em")

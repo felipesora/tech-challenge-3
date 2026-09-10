@@ -14,6 +14,8 @@ public interface ConsultaGateway {
 
     boolean existeConsultaMedicoNoHorario(UUID medicoId, LocalDateTime dataHora);
 
+    boolean existeConsultaMedicoNoHorarioExcluindoId(UUID medicoId, LocalDateTime dataHora, UUID consultaId);
+
     List<Consulta> buscarPorPacienteId(UUID pacienteId);
 
     List<Consulta> buscarConsultasFuturasPorPacienteId(UUID pacienteId, LocalDateTime dataHora);
